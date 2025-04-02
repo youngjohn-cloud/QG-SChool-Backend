@@ -2,36 +2,45 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+class Teacher extends Model
 {
-    use HasFactory, HasApiTokens, Notifiable;
-
+    use HasFactory;
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'guardian_id',
+        'teacher_id',
         'firstname',
-        'middlename',
         'lastname',
         'email',
         'password',
-        'address',
         'phone',
         'gender',
+        'address',
+        'dob',
+        'qualifications',
+        'teacher_dp',
+        'blood_type',
+        'hire_date'
     ];
-    // define the relationship between the parent and students
-    public function students()
+
+    // defining the relationship between the teacher and subject, Lesson , Classes
+    public function subjects()
     {
-        return $this->hasMany(Student::class, 'guardian_id');
+        return $this->belongsToMany(Subject::class, 'teacher_subject');
+    }
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class);
+    }
+    public function classes()
+    {
+        return $this->hasMany(QG_Class::class, 'teacher_id');
     }
 
     /**
