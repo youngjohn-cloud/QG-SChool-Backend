@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('email');
             $table->string('password');
+            $table->string('firstname');
+            $table->string('lastname');
             $table->string('role')->default('admin');
             $table->timestamps();
         });

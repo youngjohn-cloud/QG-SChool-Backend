@@ -9,10 +9,11 @@ class Exam extends Model
 {
     use HasFactory;
 
-    protected $fillables = [
+    protected $fillable = [
         'title',
         'startTime',
         'endTime',
+        'lesson_id',
     ];
 
     public function lesson()

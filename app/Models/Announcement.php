@@ -9,7 +9,7 @@ class Announcement extends Model
 {
     use HasFactory;
 
-    protected $fillables = [
+    protected $fillable = [
         'class_id',
         'title',
         'description',

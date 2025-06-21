@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('class_id')->constrained('q_g__classes')->onDelete('cascade');
+            $table->foreignId('class_id')->constrained('qg__classes')->onDelete('cascade');
             $table->string('title');
             $table->string('description');
             $table->DateTime('start_time');

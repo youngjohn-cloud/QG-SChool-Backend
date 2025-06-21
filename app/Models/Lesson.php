@@ -14,6 +14,9 @@ class Lesson extends Model
         'day',
         'start_time',
         'end_time',
+        'teacher_id',
+        'class_id',
+        'subject_id',
     ];
 
     public function subject()

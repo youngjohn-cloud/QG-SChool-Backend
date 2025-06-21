@@ -11,10 +11,19 @@ use Illuminate\Http\Request;
 class StudentController extends Controller
 {
     // CRUD METHOD FOR THE STUDENT MODELS
+
+    // ALL STUDENTS FOR THE ADMIN TO SEE
     public function studentList()
     {
         $students = Student::with('level', 'class', 'guardian')->get();
         return response()->json($students, 200);
+    }
+
+    // ALL STUDENTS OF THE PARENT OR GUARDIAN
+    public function getStudentsByGuardian($guardianId)
+    {
+        $wards = Student::with(['level', 'class', 'guardian'])->where('guardian_id', $guardianId)->get();
+        return response()->json($wards, 200);
     }
 
     public function createStudent(StudentRequest $request)

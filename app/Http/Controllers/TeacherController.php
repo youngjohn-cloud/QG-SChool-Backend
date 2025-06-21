@@ -6,6 +6,7 @@ use App\Http\Requests\TeacherRequest;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class TeacherController extends Controller
 {
@@ -104,5 +105,23 @@ class TeacherController extends Controller
         }
         $teacher->delete();
         return response()->json(['message' => 'Teacher deleted successfully'], 200);
+    }
+    // Search a teacher by firstname
+    public function searchTeacher(Request $request)
+    {
+        // validate the name parameter
+        $request->validate([
+            'name' => 'required|string|min:1'
+        ]);
+        $teacher = Teacher::with('classes', 'subjects')
+            ->where('firstname', 'like', '%' . $request->input('name') . '%')
+            ->get();
+        if ($teacher) {
+            return response()->json($teacher, 200);
+        } else {
+            throw ValidationException::withMessages([
+                'message' => 'Teacher not found.'
+            ]);
+        }
     }
 }

@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
         Schema::create('results', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('assignment_id')->constrained('assignments')->onDelete('cascade');
-            $table->foreignId('exam_id')->constrained('exams')->onDelete('cascade');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('assignment_id')->nullable()->constrained('assignments')->onDelete('cascade');
+            $table->foreignId('exam_id')->nullable()->constrained('exams')->onDelete('cascade');
+            $table->foreignId('student_id')->nullable()->constrained('students')->onDelete('cascade');
             $table->integer('score');
-            $table->string('studentId');
             $table->timestamps();
         });
     }

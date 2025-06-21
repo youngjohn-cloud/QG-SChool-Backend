@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\Admin;
+use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
@@ -33,32 +36,43 @@ class LoginRequest extends FormRequest
             'password' => ['required', 'string'],
         ];
     }
-
-    /**
-     * Attempt to authenticate the request's credentials.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function authenticate(): array
     {
-        $this->ensureIsNotRateLimited();
-        $user = User::where('email', $this->input('email'))->first();
+        $credentials = $this->only('email', 'password');
+        $models = [
+            'student' => [
+                'model' => Student::class,
+                'guard' => 'student' // Match this to your config/auth.php guard name
+            ],
+            'admin' => [
+                'model' => Admin::class,
+                'guard' => 'admin'
+            ],
+            'teacher' => [
+                'model' => Teacher::class,
+                'guard' => 'teacher'
+            ],
+            'parent' => [
+                'model' => User::class, // Use User model for parents
+                'guard' => 'parent'
+            ],
+        ];
 
-        if (!$user || ! Hash::check($this->input('password'), $user->password)) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => ['Invalid credentials'],
-            ]);
+        foreach ($models as $type => $config) {
+            $model = $config['model'];
+            $user = $model::where('email', $credentials['email'])->first();
+            if ($user && Hash::check($credentials['password'], $user->password)) {
+                // Return the user and type
+                return [
+                    'type' => $type,
+                    'user' => $user,
+                ];
+            }
         }
 
-        RateLimiter::clear($this->throttleKey());
-        // Generate and return the API token 
-        $token = $user->createToken('auth-token')->plainTextToken;
-        return [
-            'user' => $user,
-            'token' => $token
-        ];
+        throw ValidationException::withMessages([
+            'email' => ['Invalid credentials'],
+        ]);
     }
 
     /**

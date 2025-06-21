@@ -17,9 +17,7 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\User;
 use Carbon\Carbon;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use LDAP\Result;
 
 class DatabaseSeeder extends Seeder
 {
@@ -32,6 +30,8 @@ class DatabaseSeeder extends Seeder
         Admin::create([
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),
+            'firstname' => 'John',
+            'lastname' => 'Doe',
         ]);
 
         // Users or parent or guardian
@@ -108,14 +108,18 @@ class DatabaseSeeder extends Seeder
         }
 
         // Results 
-        for ($i = 1; $i <= 30; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
             $result = new ModelsResult([
                 'score' => 90,
-                'studentId' => 'student' . $i,
             ]);
             // Conditionally add exam_id or assignment_id
-            $result->exam_id = $i;
-            $result->assignment_id = $i;
+            if ($i <= 10) {
+                $result->exam_id = $i;
+                $result->assignment_id = null;
+            } else {
+                $result->exam_id = null;
+                $result->assignment_id = $i - 10;
+            }
             $result->student_id = $i;
             $result->save();
         }
@@ -164,7 +168,7 @@ class DatabaseSeeder extends Seeder
             'Agricultural Science',
             'Business Studies',
             'Religious Studies (Christian/Islamic)',
-            'French (optional)',
+            'French',
         ];
 
         // Define subjects for Senior Secondary School (SSS 1–3)
@@ -185,8 +189,8 @@ class DatabaseSeeder extends Seeder
             'Computer Studies',
             'Technical Drawing',
             'Food and Nutrition',
-            'French (optional)',
-            'Music (optional)',
+            'French ',
+            'Music',
         ];
         //  Insert Primary School subjects
         foreach ($primarySubjects as $subjects) {
@@ -263,7 +267,7 @@ class DatabaseSeeder extends Seeder
 
         for ($i = 1; $i <= 10; $i++) {
             $assignment = new Assignment([
-                'title' => 'Exam' . $i,
+                'title' => 'Assignment' . $i,
                 'start_date' => $assignment_start_time,
                 'due_date' => $assignment_exam_end_time
             ]);

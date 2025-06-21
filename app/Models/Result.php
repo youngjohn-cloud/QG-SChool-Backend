@@ -9,8 +9,10 @@ class Result extends Model
 {
     use HasFactory;
 
-    protected $fillables = [
-        'studentId',
+    protected $fillable = [
+        'student_id',
+        'assignment_id',
+        'exam_id',
         'score',
     ];
 

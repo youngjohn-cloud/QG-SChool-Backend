@@ -11,7 +11,9 @@ class Qg_Class extends Model
 
     protected $fillable = [
         'name',
-        'capacity'
+        'capacity',
+        'level_id',
+        'teacher_id',
     ];
     // Realtionship to other models 
     public function lessons()

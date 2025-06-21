@@ -61,6 +61,7 @@ class LessonController extends Controller
                 'class_id' =>  $request->input('class_id'),
                 'teacher_id' =>  $request->input('teacher_id'),
             ]);
+            $lesson->load('subject', 'class', 'teacher');
             return response()->json(["message" => "Lesson updated Succesfully"], 200);
         } catch (\Throwable $th) {
             return response()->json(["message" => "Lesson update failed", "error" => $th->getMessage()], 500);
